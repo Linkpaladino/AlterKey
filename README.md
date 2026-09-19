@@ -4,10 +4,6 @@
 
 AlterKey is an Owlbear Rodeo extension for faster and more flexible token control. It adds keyboard shortcuts, reusable token variants, mirroring, multi-selection, and room-level controls without interrupting the flow of play.
 
-<p align="center">
-  <img src="docs/images/settings.png" alt="AlterKey room settings" width="520">
-</p>
-
 ## Features
 
 - 🪞 **Mirror tokens** with shortcut `1` or from the context menu.
@@ -17,6 +13,27 @@ AlterKey is an Owlbear Rodeo extension for faster and more flexible token contro
 - ⚙️ **Enable or disable features per room** from the AlterKey settings panel.
 - 🌐 **English and Portuguese (Brazil)** interface support.
 - 🌗 **Light and dark theme** integration.
+
+## Room settings
+
+The AlterKey settings panel lets the GM control which features are available in the room and change the interface language.
+
+![AlterKey room settings](docs/images/settings.png)
+
+The GM can enable or disable:
+
+- Mirror;
+- Variants;
+- Copy / Paste.
+
+Disabled context-menu options disappear immediately. If a disabled feature is triggered from the keyboard, AlterKey shows a notification explaining that the feature is disabled.
+
+The interface language can be changed between:
+
+- English;
+- Português (Brasil).
+
+English is the default language.
 
 ## How to use
 
@@ -48,9 +65,9 @@ Each configured token can use up to eight image slots mapped to shortcuts `2–9
 - Pressing a number switches the selected token to that slot.
 - The active variant is highlighted in the Variants panel.
 
-<p align="center">
-  <img src="docs/images/variants.png" alt="AlterKey variants panel" width="520">
-</p>
+The Variants panel provides quick access to every configured token image and shows which variant is currently active.
+
+![AlterKey variants panel](docs/images/variants.png)
 
 ### Manage variants
 
@@ -69,9 +86,7 @@ While AlterKey is active, hold `Shift` and click tokens to add or remove them fr
 
 Shortcuts such as `1` and `2–9` can then be applied to the selected tokens together.
 
-<p align="center">
-  <img src="docs/images/multi-selection.png" alt="AlterKey multi-selection" width="760">
-</p>
+![AlterKey multi-selection](docs/images/multi-selection.png)
 
 ### Copy and paste variants
 
@@ -80,23 +95,6 @@ GMs can copy the extra variants from one token and paste them onto another token
 Copy / Paste only transfers slots `3–9`. Each destination token keeps its own slot `2` base image.
 
 If a destination token is displaying an old variant that no longer exists after paste, AlterKey returns it to its base image.
-
-### Room settings
-
-The AlterKey settings panel allows the GM to enable or disable:
-
-- Mirror;
-- Variants;
-- Copy / Paste.
-
-Disabled context-menu options disappear immediately. If a disabled feature is triggered from the keyboard, AlterKey shows a notification explaining that the feature is disabled.
-
-The interface language can also be changed between:
-
-- English;
-- Português (Brasil).
-
-English is the default language.
 
 ## Permissions
 
