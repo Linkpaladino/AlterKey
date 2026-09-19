@@ -1,0 +1,16 @@
+{
+  "name": "AlterKey",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "description": "Token shortcuts, variants, and quick actions.",
+  "author": "Linkpaladino",
+  "icon": "/icons/alterkey-icon.png",
+  "action": {
+    "title": "AlterKey",
+    "icon": "/icons/alterkey-icon.png",
+    "popover": "/settings.html",
+    "width": 330,
+    "height": 335
+  },
+  "background_url": "/"
+}

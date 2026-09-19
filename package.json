@@ -1,0 +1,30 @@
+{
+  "name": "alterkey",
+  "version": "1.0.0",
+  "description": "Keyboard shortcuts and streamlined token variants for Owlbear Rodeo.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "owlbear-rodeo",
+    "vtt",
+    "rpg",
+    "tokens",
+    "shortcuts"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "verify": "node scripts/verify-project.mjs",
+    "build": "npm run verify && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@owlbear-rodeo/sdk": "^3.1.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}
