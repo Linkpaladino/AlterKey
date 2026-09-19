@@ -7,7 +7,7 @@
   "icon": "/icons/alterkey-icon.png",
   "action": {
     "title": "AlterKey",
-    "icon": "/icons/alterkey-icon.png",
+    "icon": "/icons/alterkey.svg",
     "popover": "/settings.html",
     "width": 330,
     "height": 335
