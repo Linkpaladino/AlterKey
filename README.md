@@ -104,15 +104,15 @@ Variant management, reordering, Copy / Paste, and room settings changes are GM-o
 
 ## Installation
 
-AlterKey is currently in development.
-
-For local testing, add the development manifest to Owlbear Rodeo:
+AlterKey is currently hosted publicly on Vercel and can be installed in Owlbear Rodeo using the manifest URL below:
 
 ```text
-http://localhost:5173/manifest.json
+https://alter-key.vercel.app/manifest.json
 ```
 
-Public installation instructions will be added once the extension is hosted.
+Add this manifest URL to Owlbear Rodeo to install AlterKey in your account.
+
+AlterKey is not yet listed in the official Owlbear Rodeo Extension Store.
 
 ## Development
 
@@ -147,6 +147,12 @@ The production output is generated in `dist/`.
 For architecture details, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 For the release checklist, see [`docs/TESTING.md`](docs/TESTING.md).
+
+## Acknowledgements
+
+AlterKey was inspired in part by **Chargr**, an Owlbear Rodeo extension that helped shape the initial idea for fast token image switching.
+
+AlterKey is an independent project and is not affiliated with or maintained by the Chargr developer.
 
 ## Author
 
