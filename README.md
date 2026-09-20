@@ -6,13 +6,13 @@ AlterKey is an Owlbear Rodeo extension for faster and more flexible token contro
 
 ## Features
 
-- 🪞 **Mirror tokens** with shortcut `1` or from the context menu.
-- 🔢 **Switch token variants** with shortcuts `2–9`.
-- ⇧ **Select multiple tokens** with `Shift + Click` while AlterKey is active.
-- 📋 **Copy and paste variant sets** between tokens while preserving each token's base image.
-- ⚙️ **Enable or disable features per room** from the AlterKey settings panel.
-- 🌐 **English and Portuguese (Brazil)** interface support.
-- 🌗 **Light and dark theme** integration.
+- **Mirror tokens** with shortcut `1` or from the context menu.
+- **Switch token variants** with shortcuts `2–9`.
+- **Select multiple tokens** with `Shift + Click` while AlterKey is active.
+- **Copy and paste variant sets** between tokens while preserving each token's base image.
+- **Enable or disable features per room** from the AlterKey settings panel.
+- **English and Portuguese (Brazil)** interface support.
+- **Light and dark theme** integration.
 
 ## Room settings
 
