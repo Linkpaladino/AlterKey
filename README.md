@@ -150,7 +150,7 @@ For the release checklist, see [`docs/TESTING.md`](docs/TESTING.md).
 
 ## Acknowledgements
 
-AlterKey was inspired in part by **Chargr**, an Owlbear Rodeo extension that helped shape the initial idea for fast token image switching.
+AlterKey was inspired in part by **[Chargr](https://github.com/MissingLinkDev/changr)**, an Owlbear Rodeo extension that helped shape the initial idea for fast token image switching.
 
 AlterKey is an independent project and is not affiliated with or maintained by the Chargr developer.
 
