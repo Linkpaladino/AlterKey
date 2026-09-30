@@ -10,11 +10,20 @@ export function getVariants(token) {
   return Array.isArray(variants) ? variants : [];
 }
 
-export function getActiveVariantIndex(token) {
+export function getStoredActiveVariantIndex(token) {
   const variants = getVariants(token);
   const storedIndex = token?.metadata?.[ACTIVE_VARIANT_METADATA_KEY];
 
-  if (Number.isInteger(storedIndex) && storedIndex >= 0 && storedIndex < variants.length) {
+  return Number.isInteger(storedIndex) && storedIndex >= 0 && storedIndex < variants.length
+    ? storedIndex
+    : null;
+}
+
+export function getActiveVariantIndex(token) {
+  const variants = getVariants(token);
+  const storedIndex = getStoredActiveVariantIndex(token);
+
+  if (storedIndex !== null) {
     const storedVariant = variants[storedIndex];
 
     if (storedVariant?.image?.url === token?.image?.url) {

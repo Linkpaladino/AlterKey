@@ -2,8 +2,12 @@ import OBR from "@owlbear-rodeo/sdk";
 
 import { BASE_VARIANT_INDEX, MAX_VARIANTS } from "../../config/constants";
 import { isGM } from "../../shared/permissions";
-import { applyVariantDataToItem, createVariant } from "./variants.mapper";
-import { getVariants, saveVariants } from "./variants.repository";
+import {
+  applyVariantDataToItem,
+  createVariant,
+  normalizeVariantScales,
+} from "./variants.mapper";
+import { getVariants, saveVariants, setVariantsOnItem } from "./variants.repository";
 
 let copiedVariants = [];
 
@@ -27,7 +31,8 @@ export async function copyVariantsFromToken(tokenId) {
     return { status: "not-found" };
   }
 
-  const variantsToCopy = getVariants(token).slice(
+  const normalized = normalizeVariantScales(getVariants(token), token.scale);
+  const variantsToCopy = normalized.variants.slice(
     BASE_VARIANT_INDEX + 1,
     MAX_VARIANTS,
   );
@@ -61,7 +66,8 @@ export async function pasteVariantsToTokens(tokenIds) {
   }
 
   for (const token of items) {
-    const existingVariants = getVariants(token);
+    const normalized = normalizeVariantScales(getVariants(token), token.scale);
+    const existingVariants = normalized.variants;
 
     const baseVariant = existingVariants[BASE_VARIANT_INDEX]
       ? structuredClone(existingVariants[BASE_VARIANT_INDEX])
@@ -69,6 +75,7 @@ export async function pasteVariantsToTokens(tokenIds) {
           token.image,
           token.grid,
           token.name || "Base",
+          token.scale,
         );
 
     const variants = [
@@ -80,35 +87,23 @@ export async function pasteVariantsToTokens(tokenIds) {
       (variant) => variant?.image?.url === token.image?.url,
     );
 
-    const activeIndex =
-      matchedIndex >= 0
-        ? matchedIndex
-        : BASE_VARIANT_INDEX;
+    const activeIndex = matchedIndex >= 0 ? matchedIndex : BASE_VARIANT_INDEX;
 
-    await saveVariants(
-      token.id,
-      variants,
-      activeIndex,
-    );
-
-    if (matchedIndex < 0) {
-      await OBR.scene.items.updateItems(
-        [token.id],
-        (updatedItems) => {
-          const item = updatedItems[0];
-
-          if (!item) {
-            return;
-          }
-
-          applyVariantDataToItem(
-            item,
-            baseVariant,
-            BASE_VARIANT_INDEX,
-          );
-        },
-      );
+    if (matchedIndex >= 0) {
+      await saveVariants(token.id, variants, activeIndex);
+      continue;
     }
+
+    await OBR.scene.items.updateItems([token.id], (updatedItems) => {
+      const item = updatedItems[0];
+
+      if (!item) {
+        return;
+      }
+
+      setVariantsOnItem(item, variants, BASE_VARIANT_INDEX);
+      applyVariantDataToItem(item, baseVariant, BASE_VARIANT_INDEX);
+    });
   }
 
   return {

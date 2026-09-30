@@ -3,18 +3,35 @@ import OBR from "@owlbear-rodeo/sdk";
 import { BASE_VARIANT_INDEX } from "../../config/constants";
 import { isGM } from "../../shared/permissions";
 import { getSelectedImageItems } from "../../shared/selection";
-import { applyVariantDataToItem, createVariant } from "./variants.mapper";
+import {
+  applyVariantDataToItem,
+  createVariant,
+  normalizeVariantScales,
+} from "./variants.mapper";
 import {
   getActiveVariantIndex,
+  getStoredActiveVariantIndex,
   getVariants,
   saveVariants,
   setVariantsOnItem,
 } from "./variants.repository";
 
+function getNormalizedVariants(item) {
+  const currentVariants = getVariants(item);
+  const { variants, changed } = normalizeVariantScales(currentVariants, item.scale);
+
+  if (changed) {
+    const activeIndex = getStoredActiveVariantIndex(item) ?? getActiveVariantIndex(item);
+    setVariantsOnItem(item, variants, activeIndex);
+  }
+
+  return variants;
+}
+
 export async function applyVariantToToken(tokenId, index) {
   await OBR.scene.items.updateItems([tokenId], (items) => {
     for (const item of items) {
-      const variant = getVariants(item)[index];
+      const variant = getNormalizedVariants(item)[index];
 
       if (variant) {
         applyVariantDataToItem(item, variant, index);
@@ -40,7 +57,7 @@ export async function applyVariantToSelection(index) {
     itemsWithVariant.map((item) => item.id),
     (items) => {
       for (const item of items) {
-        const variant = getVariants(item)[index];
+        const variant = getNormalizedVariants(item)[index];
 
         if (variant) {
           applyVariantDataToItem(item, variant, index);
@@ -74,7 +91,7 @@ export async function removeVariantFromToken(tokenId, index) {
 
   await OBR.scene.items.updateItems([tokenId], (updatedItems) => {
     for (const item of updatedItems) {
-      const variants = [...getVariants(item)];
+      const variants = [...getNormalizedVariants(item)];
 
       if (!variants[index]) {
         continue;
@@ -98,13 +115,20 @@ export async function ensureBaseVariant(token) {
   const existingVariants = getVariants(token);
 
   if (existingVariants.length) {
-    return {
-      variants: existingVariants,
-      activeIndex: getActiveVariantIndex(token),
-    };
+    const { variants, changed } = normalizeVariantScales(existingVariants, token.scale);
+    const activeIndex = getStoredActiveVariantIndex(token) ?? getActiveVariantIndex(token);
+
+    if (changed) {
+      await saveVariants(token.id, variants, activeIndex);
+    }
+
+    return { variants, activeIndex };
   }
 
-  const variants = [createVariant(token.image, token.grid, token.name || "Base")];
+  const variants = [
+    createVariant(token.image, token.grid, token.name || "Base", token.scale),
+  ];
+
   await saveVariants(token.id, variants, BASE_VARIANT_INDEX);
 
   return { variants, activeIndex: BASE_VARIANT_INDEX };

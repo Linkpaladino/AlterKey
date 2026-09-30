@@ -3,7 +3,8 @@ import OBR from "@owlbear-rodeo/sdk";
 import { BASE_VARIANT_INDEX, MAX_VARIANTS } from "../../config/constants";
 import { isGM } from "../../shared/permissions";
 import { createVariant } from "./variants.mapper";
-import { getActiveVariantIndex, getVariants, saveVariants } from "./variants.repository";
+import { saveVariants } from "./variants.repository";
+import { ensureBaseVariant } from "./variants.service";
 
 function resolveAssetType(token) {
   const validAssetTypes = ["CHARACTER", "PROP", "MOUNT", "ATTACHMENT", "NOTE", "MAP"];
@@ -15,13 +16,9 @@ export async function addVariantFromLibrary(token) {
     return { status: "forbidden" };
   }
 
-  const variants = [...getVariants(token)];
-  let activeIndex = getActiveVariantIndex(token);
-
-  if (!variants.length) {
-    variants.push(createVariant(token.image, token.grid, token.name || "Base"));
-    activeIndex = BASE_VARIANT_INDEX;
-  }
+  const baseState = await ensureBaseVariant(token);
+  const variants = [...baseState.variants];
+  const activeIndex = baseState.activeIndex ?? BASE_VARIANT_INDEX;
 
   if (variants.length >= MAX_VARIANTS) {
     return { status: "limit" };
@@ -34,7 +31,16 @@ export async function addVariantFromLibrary(token) {
   }
 
   const selectedAsset = selectedAssets[0];
-  variants.push(createVariant(selectedAsset.image, selectedAsset.grid, selectedAsset.name));
+  const baseScale = variants[BASE_VARIANT_INDEX]?.scale ?? token.scale;
+
+  variants.push(
+    createVariant(
+      selectedAsset.image,
+      selectedAsset.grid,
+      selectedAsset.name,
+      baseScale,
+    ),
+  );
 
   await saveVariants(token.id, variants, activeIndex);
   return { status: "added" };
