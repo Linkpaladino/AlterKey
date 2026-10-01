@@ -67,6 +67,7 @@ async function main() {
     "settings.html",
     "variants.html",
     "public/icons/alterkey.svg",
+    "public/icons/alterkey-icon.png",
     "public/manifest.json",
   ]);
 

@@ -72,6 +72,15 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.variant-slot[data-reorderable="true"] {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
 .number {
@@ -91,50 +100,31 @@ body {
   pointer-events: none;
 }
 
-.remove,
-.drag-handle {
+.remove {
   position: absolute;
   top: 2px;
+  right: 2px;
   z-index: 2;
   display: none;
   width: 16px;
   height: 16px;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
   background: rgba(0, 0, 0, 0.8);
   color: #ffffff;
-}
-
-.remove {
-  right: 2px;
-  border-radius: 50%;
   font-size: 13px;
   font-weight: 700;
   line-height: 16px;
   cursor: pointer;
 }
 
-.drag-handle {
-  left: 2px;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 16px;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-}
-
-.variant-slot:hover .remove,
-.variant-slot:hover .drag-handle {
+.variant-slot:hover .remove {
   display: flex;
 }
 
 .remove:hover {
   background: rgba(180, 40, 40, 0.95);
-}
-
-.drag-handle:active {
-  cursor: grabbing;
 }
 
 .variant-slot.active {
@@ -149,6 +139,7 @@ body {
 
 .variant-slot.dragging {
   opacity: 0.45;
+  cursor: grabbing;
 }
 
 .variant-slot.drag-over {
@@ -157,8 +148,7 @@ body {
 }
 
 @media (hover: none), (pointer: coarse) {
-  .variant-slot .remove,
-  .variant-slot .drag-handle {
+  .variant-slot .remove {
     display: flex;
   }
 }

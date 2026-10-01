@@ -2,6 +2,30 @@
 
 All notable changes to AlterKey will be documented in this file.
 
+## 1.1.0
+
+### Added
+
+- Individual scale support for each token variant.
+- Synchronization with Owlbear Rodeo's native `Replace Image` action.
+- Automatic scale synchronization when resizing the currently active variant.
+- Room setting to allow the base variant in slot `2` to be reordered.
+
+### Changed
+
+- New variants now inherit the scale of the base variant when created.
+- The base variant can optionally be swapped with another variant, making the new slot `2` the token's base.
+- The previous base becomes a regular variant after being swapped and can be removed normally.
+- Copy / Paste continues to preserve the current base variant of the destination token.
+- Variant reordering can now be started by dragging the entire variant card instead of using a dedicated drag handle.
+- Variant scale and token mirroring are handled independently, preserving the current mirror state when switching variants.
+
+### Fixed
+
+- Fixed variants with different image dimensions sharing the same visual scale.
+- Fixed `Replace Image` changes being lost when switching away from and back to a variant.
+- Fixed drag state cleanup when a reorder gesture is cancelled or ends without moving a variant.
+
 ## 1.0.0
 
 ### Added

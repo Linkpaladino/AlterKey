@@ -1,37 +1,19 @@
 import { BASE_VARIANT_INDEX } from "../../../config/constants";
 
 function renderManagementControls(index, activeIndex, canManage, t) {
-  if (!canManage) {
+  if (!canManage || index === BASE_VARIANT_INDEX || index === activeIndex) {
     return "";
   }
 
-  const dragHandle =
-    index === BASE_VARIANT_INDEX
-      ? ""
-      : `
-        <span
-          class="drag-handle"
-          data-drag-index="${index}"
-          title="${t("variants.dragToReorder")}"
-        >
-          ⠿
-        </span>
-      `;
-
-  const removeButton =
-    index === BASE_VARIANT_INDEX || index === activeIndex
-      ? ""
-      : `
-        <span
-          class="remove"
-          data-remove-index="${index}"
-          title="${t("variants.remove")}"
-        >
-          ×
-        </span>
-      `;
-
-  return dragHandle + removeButton;
+  return `
+    <span
+      class="remove"
+      data-remove-index="${index}"
+      title="${t("variants.remove")}"
+    >
+      ×
+    </span>
+  `;
 }
 
 export function renderLoading(app, t) {
@@ -50,11 +32,20 @@ export function renderEmpty(app, t) {
   `;
 }
 
-export function renderVariantsGrid(app, variants, activeIndex, maxVariants, canManage, t) {
+export function renderVariantsGrid(
+  app,
+  variants,
+  activeIndex,
+  maxVariants,
+  canManage,
+  baseVariantReorderingEnabled,
+  t,
+) {
   const buttons = variants
     .map((variant, index) => {
       const shortcut = index + 2;
-      const reorderable = canManage && index !== BASE_VARIANT_INDEX;
+      const reorderable =
+        canManage && (index !== BASE_VARIANT_INDEX || baseVariantReorderingEnabled);
 
       return `
         <button
@@ -63,7 +54,11 @@ export function renderVariantsGrid(app, variants, activeIndex, maxVariants, canM
           data-reorderable="${reorderable}"
           title="${t("variants.shortcut", { shortcut })}"
         >
-          <img src="${variant.image.url}" alt="${t("variants.variantAlt", { number: shortcut })}">
+          <img
+            src="${variant.image.url}"
+            alt="${t("variants.variantAlt", { number: shortcut })}"
+            draggable="false"
+          >
           ${renderManagementControls(index, activeIndex, canManage, t)}
           <span class="number">${shortcut}</span>
         </button>

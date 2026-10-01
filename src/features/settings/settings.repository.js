@@ -8,6 +8,7 @@ const SETTING_KEYS = new Set([
   "mirrorEnabled",
   "variantsEnabled",
   "clipboardEnabled",
+  "baseVariantReorderingEnabled",
   "language",
 ]);
 
@@ -15,6 +16,7 @@ const DEFAULT_SETTINGS = {
   mirrorEnabled: true,
   variantsEnabled: true,
   clipboardEnabled: true,
+  baseVariantReorderingEnabled: false,
   language: "en",
 };
 
@@ -32,6 +34,10 @@ function normalizeSettings(settings = {}) {
       typeof settings.clipboardEnabled === "boolean"
         ? settings.clipboardEnabled
         : DEFAULT_SETTINGS.clipboardEnabled,
+    baseVariantReorderingEnabled:
+      typeof settings.baseVariantReorderingEnabled === "boolean"
+        ? settings.baseVariantReorderingEnabled
+        : DEFAULT_SETTINGS.baseVariantReorderingEnabled,
     language: SUPPORTED_LANGUAGES.has(settings.language)
       ? settings.language
       : DEFAULT_SETTINGS.language,

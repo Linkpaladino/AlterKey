@@ -78,6 +78,13 @@ function renderSettings(settings, canManage) {
         canManage,
       )}
       ${renderToggle(
+        "baseVariantReorderingEnabled",
+        "settings.baseVariantReordering",
+        "settings.baseVariantReorderingDescription",
+        settings.baseVariantReorderingEnabled,
+        canManage,
+      )}
+      ${renderToggle(
         "clipboardEnabled",
         "settings.clipboard",
         "settings.clipboardDescription",

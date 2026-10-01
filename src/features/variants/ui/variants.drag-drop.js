@@ -1,15 +1,29 @@
+const DRAG_THRESHOLD = 6;
+
 export function setupVariantDragDrop({ onReorder }) {
-  let draggedIndex = null;
+  let pointerId = null;
+  let draggedSlot = null;
   let dragOverSlot = null;
+  let startX = 0;
+  let startY = 0;
+  let isDragging = false;
+  let suppressClickSlot = null;
 
-  const handles = document.querySelectorAll(".drag-handle");
+  const slots = document.querySelectorAll(".variant-slot");
 
-  function clearDragState() {
-    draggedIndex = null;
+  function clearVisualState() {
+    dragOverSlot?.classList.remove("drag-over");
+    draggedSlot?.classList.remove("dragging");
     dragOverSlot = null;
-    document.querySelectorAll(".variant-slot").forEach((slot) => {
-      slot.classList.remove("dragging", "drag-over");
-    });
+  }
+
+  function resetPointerState() {
+    clearVisualState();
+    pointerId = null;
+    draggedSlot = null;
+    startX = 0;
+    startY = 0;
+    isDragging = false;
   }
 
   function updateDragTarget(event) {
@@ -26,51 +40,95 @@ export function setupVariantDragDrop({ onReorder }) {
     dragOverSlot?.classList.add("drag-over");
   }
 
-  handles.forEach((handle) => {
-    handle.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
+  function hasReachedDragThreshold(event) {
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    return Math.hypot(deltaX, deltaY) >= DRAG_THRESHOLD;
+  }
 
-    handle.addEventListener("pointerdown", (event) => {
+  slots.forEach((slot) => {
+    slot.addEventListener(
+      "click",
+      (event) => {
+        if (suppressClickSlot !== slot) {
+          return;
+        }
+
+        suppressClickSlot = null;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+      true,
+    );
+
+    slot.addEventListener("pointerdown", (event) => {
+      if (slot.dataset.reorderable !== "true") {
+        return;
+      }
+
       if (event.button !== undefined && event.button !== 0) {
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
+      if (event.target.closest(".remove")) {
+        return;
+      }
 
-      draggedIndex = Number(handle.dataset.dragIndex);
-      handle.setPointerCapture?.(event.pointerId);
-      handle.closest(".variant-slot")?.classList.add("dragging");
+      pointerId = event.pointerId;
+      draggedSlot = slot;
+      startX = event.clientX;
+      startY = event.clientY;
+      isDragging = false;
+      slot.setPointerCapture?.(event.pointerId);
     });
 
-    handle.addEventListener("pointermove", (event) => {
-      if (draggedIndex === null) {
+    slot.addEventListener("pointermove", (event) => {
+      if (event.pointerId !== pointerId || draggedSlot !== slot) {
         return;
+      }
+
+      if (!isDragging && !hasReachedDragThreshold(event)) {
+        return;
+      }
+
+      if (!isDragging) {
+        isDragging = true;
+        draggedSlot.classList.add("dragging");
       }
 
       event.preventDefault();
       updateDragTarget(event);
     });
 
-    handle.addEventListener("pointerup", async (event) => {
-      if (draggedIndex === null) {
+    slot.addEventListener("pointerup", (event) => {
+      if (event.pointerId !== pointerId || draggedSlot !== slot) {
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      const fromIndex = draggedIndex;
+      const fromIndex = Number(slot.dataset.index);
       const toIndex = dragOverSlot ? Number(dragOverSlot.dataset.index) : fromIndex;
-      clearDragState();
+      const completedDrag = isDragging;
 
-      if (fromIndex !== toIndex) {
-        await onReorder(fromIndex, toIndex);
+      if (slot.hasPointerCapture?.(event.pointerId)) {
+        slot.releasePointerCapture(event.pointerId);
+      }
+
+      if (completedDrag) {
+        suppressClickSlot = slot;
+        event.preventDefault();
+      }
+
+      resetPointerState();
+
+      if (completedDrag && fromIndex !== toIndex) {
+        void onReorder(fromIndex, toIndex);
       }
     });
 
-    handle.addEventListener("pointercancel", clearDragState);
+    slot.addEventListener("pointercancel", (event) => {
+      if (event.pointerId === pointerId && draggedSlot === slot) {
+        resetPointerState();
+      }
+    });
   });
 }

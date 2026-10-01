@@ -132,7 +132,15 @@ async function render() {
   const { variants, activeIndex } = await ensureBaseVariant(token);
   const canManage = await isGM();
 
-  renderVariantsGrid(app, variants, activeIndex, MAX_VARIANTS, canManage, t);
+  renderVariantsGrid(
+    app,
+    variants,
+    activeIndex,
+    MAX_VARIANTS,
+    canManage,
+    settings.baseVariantReorderingEnabled,
+    t,
+  );
   registerUiEvents();
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "alterkey",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Keyboard shortcuts and streamlined token variants for Owlbear Rodeo.",
   "private": true,
   "type": "module",
